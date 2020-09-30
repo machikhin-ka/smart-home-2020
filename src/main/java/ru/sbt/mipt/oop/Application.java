@@ -1,21 +1,22 @@
 package ru.sbt.mipt.oop;
 
-import java.io.IOException;
-
 public class Application {
-    private final SmartHomeDeserialization smartHomeDeserialization = new SmartHomeDeserialization();
     private final SensorEventProcessingCycle sensorEventProcessingCycle;
 
-    public Application() throws IOException {
-        SmartHome smartHome = smartHomeDeserialization.toDeserialize("smart-home-1.js");
+    public Application(SmartHomeDeserialization deserialization) {
+        // считываем состояние дома из файла
+        SmartHome smartHome = deserialization.toDeserialize();
         sensorEventProcessingCycle = new SensorEventProcessingCycle(smartHome);
     }
 
-    public static void main(String... args) throws IOException {
-        Application application = new Application();
-        // считываем состояние дома из файла
-        SmartHome smartHome = application.smartHomeDeserialization.toDeserialize("smart-home-1.js");
+    public static void main(String... args) {
+        JsonSmartHomeDeserialization deserialization = new JsonSmartHomeDeserialization("smart-home-1.js");
+        Application application = new Application(deserialization);
         // начинаем цикл обработки событий
-        application.sensorEventProcessingCycle.toStartSensorEventProcessingCycle();
+        application.run();
+    }
+
+    public void run() {
+        sensorEventProcessingCycle.toStartSensorEventProcessingCycle();
     }
 }

@@ -1,18 +1,16 @@
 package ru.sbt.mipt.oop;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 public class HomeBuilder {
-    private final SmartHomeSerialization serialization = new SmartHomeSerialization();
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        SmartHomeSerialization serialization = new JsonSmartHomeSerialization("output.js");
         HomeBuilder homeBuilder = new HomeBuilder();
         SmartHome smartHome = homeBuilder.createSmartHome();
-        homeBuilder.serialization.toSerialize(smartHome, "output.js");
+        serialization.toSerialize(smartHome);
     }
 
-    private SmartHome createSmartHome() {
+    public SmartHome createSmartHome() {
         Room kitchen = new Room(Arrays.asList(new Light("1", false), new Light("2", true)),
                 Arrays.asList(new Door(false, "1")),
                 "kitchen");
