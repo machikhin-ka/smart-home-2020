@@ -4,12 +4,13 @@ import static ru.sbt.mipt.oop.SensorEventType.*;
 import static ru.sbt.mipt.oop.SensorEventType.DOOR_CLOSED;
 
 public class SensorEventProcessingCycle {
-	private final SensorEventGetter eventGetter = new SensorEventGetter();
+	private final SensorEventGetter eventGetter;
 	private final SmartHome smartHome;
 	private SensorEventHandler eventHandler;
 
-	public SensorEventProcessingCycle(SmartHome smartHome) {
+	public SensorEventProcessingCycle(SmartHome smartHome, SensorEventGetter eventGetter) {
 		this.smartHome = smartHome;
+		this.eventGetter = eventGetter;
 	}
 
 	public void toStartSensorEventProcessingCycle() {
