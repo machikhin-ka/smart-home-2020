@@ -13,7 +13,7 @@ public class JsonSmartHomeDeserialization implements SmartHomeDeserialization {
 		this.fileName = fileName;
 	}
 
-	public SmartHome toDeserialize() {
+	public SmartHome deserialize() {
 		Gson gson = new Gson();
 		String json = null;
 		try {

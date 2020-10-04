@@ -1,5 +1,5 @@
 package ru.sbt.mipt.oop;
 
 public interface SmartHomeDeserialization {
-	SmartHome toDeserialize();
+	SmartHome deserialize();
 }

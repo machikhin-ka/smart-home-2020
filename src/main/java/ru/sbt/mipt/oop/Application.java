@@ -5,7 +5,7 @@ public class Application {
 
     public Application(SmartHomeDeserialization deserialization, SensorEventGetter eventGetter) {
         // считываем состояние дома из файла
-        SmartHome smartHome = deserialization.toDeserialize();
+        SmartHome smartHome = deserialization.deserialize();
         sensorEventProcessingCycle = new SensorEventProcessingCycle(smartHome, eventGetter);
     }
 
@@ -18,6 +18,6 @@ public class Application {
     }
 
     public void run() {
-        sensorEventProcessingCycle.toStartSensorEventProcessingCycle();
+        sensorEventProcessingCycle.start();
     }
 }

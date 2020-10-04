@@ -7,7 +7,7 @@ public class HomeBuilder {
         SmartHomeSerialization serialization = new JsonSmartHomeSerialization("output.js");
         HomeBuilder homeBuilder = new HomeBuilder();
         SmartHome smartHome = homeBuilder.createSmartHome();
-        serialization.toSerialize(smartHome);
+        serialization.serialize(smartHome);
     }
 
     public SmartHome createSmartHome() {

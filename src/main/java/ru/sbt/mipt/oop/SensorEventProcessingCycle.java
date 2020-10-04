@@ -13,7 +13,7 @@ public class SensorEventProcessingCycle {
 		this.eventGetter = eventGetter;
 	}
 
-	public void toStartSensorEventProcessingCycle() {
+	public void start() {
 		SensorEvent event = eventGetter.getNextSensorEvent();
 		while (event != null) {
 			System.out.println("Got event: " + event);
@@ -22,7 +22,7 @@ public class SensorEventProcessingCycle {
 			} else if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
 				eventHandler = new DoorEventHandler(smartHome, event);
 			}
-			eventHandler.toHandel();
+			eventHandler.handle();
 			event = eventGetter.getNextSensorEvent();
 		}
 	}
