@@ -1,5 +1,5 @@
 package ru.sbt.mipt.oop;
 
 public interface SensorEventHandler {
-	void handle();
+	void handle(SmartHome smartHome, SensorEvent event);
 }

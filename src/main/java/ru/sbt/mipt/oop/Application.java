@@ -1,23 +1,30 @@
 package ru.sbt.mipt.oop;
 
-public class Application {
-    private final SensorEventProcessingCycle sensorEventProcessingCycle;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Application(SmartHomeDeserialization deserialization, SensorEventGetter eventGetter) {
-        // считываем состояние дома из файла
-        SmartHome smartHome = deserialization.deserialize();
-        sensorEventProcessingCycle = new SensorEventProcessingCycle(smartHome, eventGetter);
+public class Application {
+    private final SensorEventGetter eventGetter;
+    private final List<SensorEventHandler> handlers;
+
+    public Application(SensorEventGetter eventGetter, List<SensorEventHandler> handlers) {
+        this.eventGetter = eventGetter;
+        this.handlers = handlers;
     }
 
     public static void main(String... args) {
-        JsonSmartHomeDeserialization deserialization = new JsonSmartHomeDeserialization("smart-home-1.js");
-        SensorEventGetter sensorEventGetter = new SensorEventGetter();
-        Application application = new Application(deserialization, sensorEventGetter);
+        List<SensorEventHandler> handlers = new ArrayList<>();
+        handlers.add(new DoorEventHandler());
+        handlers.add(new LightEventHandler());
+        RandomSensorEventGetter randomSensorEventGetter = new RandomSensorEventGetter();
+        Application application = new Application(randomSensorEventGetter, handlers);
         // начинаем цикл обработки событий
         application.run();
     }
 
     public void run() {
-        sensorEventProcessingCycle.start();
+        JsonSmartHomeDeserialization deserialization = new JsonSmartHomeDeserialization("smart-home-1.js");
+        SmartHome smartHome = deserialization.deserialize();
+        new SensorEventProcessingCycle(smartHome, eventGetter, handlers).start();
     }
 }

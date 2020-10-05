@@ -1,28 +1,25 @@
 package ru.sbt.mipt.oop;
 
-import static ru.sbt.mipt.oop.SensorEventType.*;
-import static ru.sbt.mipt.oop.SensorEventType.DOOR_CLOSED;
+import java.util.List;
 
 public class SensorEventProcessingCycle {
 	private final SensorEventGetter eventGetter;
 	private final SmartHome smartHome;
-	private SensorEventHandler eventHandler;
+	private final List<SensorEventHandler> handlers;
 
-	public SensorEventProcessingCycle(SmartHome smartHome, SensorEventGetter eventGetter) {
+	public SensorEventProcessingCycle(SmartHome smartHome, SensorEventGetter eventGetter, List<SensorEventHandler> handlers) {
 		this.smartHome = smartHome;
 		this.eventGetter = eventGetter;
+		this.handlers = handlers;
 	}
 
 	public void start() {
 		SensorEvent event = eventGetter.getNextSensorEvent();
 		while (event != null) {
 			System.out.println("Got event: " + event);
-			if (event.getType() == LIGHT_ON || event.getType() == LIGHT_OFF) {
-				eventHandler = new LightEventHandler(smartHome, event);
-			} else if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
-				eventHandler = new DoorEventHandler(smartHome, event);
+			for (SensorEventHandler handler : handlers) {
+				handler.handle(smartHome, event);
 			}
-			eventHandler.handle();
 			event = eventGetter.getNextSensorEvent();
 		}
 	}
