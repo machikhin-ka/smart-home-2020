@@ -1,22 +1,22 @@
 package ru.sbt.mipt.oop;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Application {
-    private final SensorEventGetter eventGetter;
+    private final SensorEventProvider eventGetter;
     private final List<SensorEventHandler> handlers;
 
-    public Application(SensorEventGetter eventGetter, List<SensorEventHandler> handlers) {
+    public Application(SensorEventProvider eventGetter, List<SensorEventHandler> handlers) {
         this.eventGetter = eventGetter;
         this.handlers = handlers;
     }
 
     public static void main(String... args) {
-        List<SensorEventHandler> handlers = new ArrayList<>();
-        handlers.add(new DoorEventHandler());
-        handlers.add(new LightEventHandler());
-        RandomSensorEventGetter randomSensorEventGetter = new RandomSensorEventGetter();
+        CommandSender commandSender = new CommandSender();
+        List<SensorEventHandler> handlers = Arrays.asList(new DoorEventHandler(commandSender), new LightEventHandler());
+        SensorEventProvider randomSensorEventGetter = new RandomSensorEventProvider();
         Application application = new Application(randomSensorEventGetter, handlers);
         // начинаем цикл обработки событий
         application.run();

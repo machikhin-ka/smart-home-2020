@@ -3,11 +3,11 @@ package ru.sbt.mipt.oop;
 import java.util.List;
 
 public class SensorEventProcessingCycle {
-	private final SensorEventGetter eventGetter;
+	private final SensorEventProvider eventGetter;
 	private final SmartHome smartHome;
 	private final List<SensorEventHandler> handlers;
 
-	public SensorEventProcessingCycle(SmartHome smartHome, SensorEventGetter eventGetter, List<SensorEventHandler> handlers) {
+	public SensorEventProcessingCycle(SmartHome smartHome, SensorEventProvider eventGetter, List<SensorEventHandler> handlers) {
 		this.smartHome = smartHome;
 		this.eventGetter = eventGetter;
 		this.handlers = handlers;

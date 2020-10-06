@@ -4,6 +4,12 @@ import static ru.sbt.mipt.oop.SensorEventType.DOOR_OPEN;
 import static ru.sbt.mipt.oop.SensorEventType.DOOR_CLOSED;
 
 public class DoorEventHandler implements SensorEventHandler {
+	private final CommandSender commandSender;
+
+	public DoorEventHandler(CommandSender commandSender) {
+		this.commandSender = commandSender;
+	}
+
 	@Override
 	public void handle(SmartHome smartHome, SensorEvent event) {
 		if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
@@ -42,7 +48,7 @@ public class DoorEventHandler implements SensorEventHandler {
 			for (Light light : homeRoom.getLights()) {
 				light.setOn(false);
 				SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-				new CommandSender().sendCommand(command);
+				commandSender.sendCommand(command);
 			}
 		}
 	}
