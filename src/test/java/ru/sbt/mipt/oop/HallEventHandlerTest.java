@@ -41,17 +41,17 @@ class HallEventHandlerTest {
 	}
 
 	@Test
-	void handle_closeDoor_whenEventTypeIsDoorClosedAndRoomIsHall() {
+	void handle_nothing_whenEventTypeIsDoorOpen() {
 		//given
 		Door door = new Door(true, "1");
 		Room kitchen = new Room(null,
 				Arrays.asList(door),
 				"hall");
-		SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "1");
+		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		smartHome.addRoom(kitchen);
 		//when
 		hallEventHandler.handle(smartHome, event);
 		//then
-		assertFalse(door.isOpen());
+		assertTrue(door.isOpen());
 	}
 }

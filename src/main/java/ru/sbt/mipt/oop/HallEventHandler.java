@@ -24,20 +24,12 @@ public class HallEventHandler implements SensorEventHandler {
 						}
 						Door door = (Door) component;
 						if (door.getId().equals(event.getObjectId())) {
-							this.closeDoor(smartHome, door);
+							setOffAllLight(smartHome);
 						}
 					});
 				}
 			});
 		}
-	}
-
-	private void closeDoor(SmartHome smartHome, Door door) {
-		door.setOpen(false);
-		System.out.println("Door " + door.getId() + " was closed.");
-		// если мы получили событие о закрытие двери в холле - это значит, что была закрыта входная дверь.
-		// в этом случае мы хотим автоматически выключить свет во всем доме (это же умный дом!)
-		setOffAllLight(smartHome);
 	}
 
 	private void setOffAllLight(SmartHome smartHome) {
