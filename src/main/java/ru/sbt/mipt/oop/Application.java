@@ -1,6 +1,5 @@
 package ru.sbt.mipt.oop;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,9 +14,10 @@ public class Application {
 
     public static void main(String... args) {
         CommandSender commandSender = new CommandSender();
-        List<SensorEventHandler> handlers = Arrays.asList(new DoorEventHandler(commandSender), new LightEventHandler());
-        SensorEventProvider randomSensorEventGetter = new RandomSensorEventProvider();
-        Application application = new Application(randomSensorEventGetter, handlers);
+        List<SensorEventHandler> handlers
+                = Arrays.asList(new DoorEventHandler(), new LightEventHandler(), new HallEventHandler(commandSender));
+        SensorEventProvider randomSensorEventProvider = new RandomSensorEventProvider();
+        Application application = new Application(randomSensorEventProvider, handlers);
         // начинаем цикл обработки событий
         application.run();
     }
