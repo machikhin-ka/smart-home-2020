@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LightTest {
 
 	@Test
-	void execute_returnTrue_whenActionChangeStateOfLightCorrectly() {
+	void execute_turnOnLight_whenActionChangeStateOfLightToOn() {
 		//given
 		Light light = new Light("1", false);
 		//when

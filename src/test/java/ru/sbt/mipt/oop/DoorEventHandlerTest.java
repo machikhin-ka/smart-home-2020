@@ -38,7 +38,7 @@ class DoorEventHandlerTest {
 	}
 
 	@Test
-	void handle_returnTrue_whenDoorIsOpenedCorrectly() {
+	void handle_openDoor_whenEventTypeIsDoorOpen() {
 		//given
 		Door door = new Door(false, "1");
 		Room kitchen = new Room(null,
@@ -54,7 +54,7 @@ class DoorEventHandlerTest {
 	}
 
 	@Test
-	void handle_returnTrue_whenDoorIsClosedCorrectly() {
+	void handle_closeDoor_whenEventTypeIsDoorClosed() {
 		//given
 		Door door = new Door(true, "1");
 		Room kitchen = new Room(null,
@@ -64,8 +64,9 @@ class DoorEventHandlerTest {
 		smartHome.addRoom(kitchen);
 		//when
 		doorEventHandler.handle(smartHome, event);
+		boolean isTrue = !door.isOpen();
 		//then
-		assertFalse(door.isOpen());
+		assertTrue(isTrue);
 		assertEquals("Door " + door.getId() + " was closed.\n", outContent.toString());
 	}
 }

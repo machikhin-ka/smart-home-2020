@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RoomTest {
 
 	@Test
-	void execute_returnTrue_whenAllDoorsAreClosedAndLightsAreTurnedOff() {
+	void execute_passAllComponentOfRoom_whenIterateOverAllComponent() {
 		//given
 		Door door = new Door(true, "1");
 		Light light = new Light("1", true);

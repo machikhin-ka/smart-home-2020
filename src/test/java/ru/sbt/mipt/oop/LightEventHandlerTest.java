@@ -38,7 +38,7 @@ class LightEventHandlerTest {
 	}
 
 	@Test
-	void handle_returnTrue_whenLightIsTurnedOnCorrectly() {
+	void handle_turnOnLight_whenEventTypeIsLightOn() {
 		//given
 		Light light = new Light("1", false);
 		Room kitchen = new Room(Arrays.asList(light),
@@ -50,11 +50,25 @@ class LightEventHandlerTest {
 		lightEventHandler.handle(smartHome, event);
 		//then
 		assertTrue(light.isOn());
+	}
+
+	@Test
+	void handle_printCorrectMessage_whenEventTypeIsLightOn() {
+		//given
+		Light light = new Light("1", false);
+		Room kitchen = new Room(Arrays.asList(light),
+				null,
+				"kitchen");
+		SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, "1");
+		smartHome.addRoom(kitchen);
+		//when
+		lightEventHandler.handle(smartHome, event);
+		//then
 		assertEquals("Light " + light.getId() + " was turned on.\n", outContent.toString());
 	}
 
 	@Test
-	void handle_returnTrue_whenLightIsTurnedOffCorrectly() {
+	void handle_turnOffLight_whenEventTypeIsLightOff() {
 		//given
 		Light light = new Light("1", true);
 		Room kitchen = new Room(Arrays.asList(light),
@@ -66,6 +80,20 @@ class LightEventHandlerTest {
 		lightEventHandler.handle(smartHome, event);
 		//then
 		assertFalse(light.isOn());
+	}
+
+	@Test
+	void handle_printCorrectMessage_whenEventTypeIsLightOff() {
+		//given
+		Light light = new Light("1", true);
+		Room kitchen = new Room(Arrays.asList(light),
+				null,
+				"kitchen");
+		SensorEvent event = new SensorEvent(SensorEventType.LIGHT_OFF, "1");
+		smartHome.addRoom(kitchen);
+		//when
+		lightEventHandler.handle(smartHome, event);
+		//then
 		assertEquals("Light " + light.getId() + " was turned off.\n", outContent.toString());
 	}
 }

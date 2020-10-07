@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SmartHomeTest {
 	@Test
-	void execute_returnTrue_whenAllDoorsAreClosedAndLightsAreTurnedOff() {
+	void execute_passAllComponentOfSmartHome_whenIterateOverAllComponent() {
 		//given
 		Door firstDoor = new Door(true, "1");
 		Door secondDoor = new Door(true, "2");

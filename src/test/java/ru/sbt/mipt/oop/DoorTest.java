@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DoorTest {
 
 	@Test
-	void execute_returnTrue_whenActionChangeStateOfDoorCorrectly() {
+	void execute_closeDoor_whenActionChangeStateOfDoorToClosed() {
 		//given
 		Door door = new Door(false, "1");
 		//when

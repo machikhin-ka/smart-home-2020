@@ -21,7 +21,7 @@ class HallEventHandlerTest {
 	}
 
 	@Test
-	void handle_returnTrue_whenAllLightsAreTurnedOffCorrectly() {
+	void handle_turnedOffAllLights_whenEventTypeIsDoorClosedAndRoomIsHall() {
 		//given
 		Door door = new Door(true, "1");
 		Light lightOne = new Light("1", true);
@@ -41,7 +41,7 @@ class HallEventHandlerTest {
 	}
 
 	@Test
-	void handle_returnFalse_whenDoorIsClosed() {
+	void handle_closeDoor_whenEventTypeIsDoorClosedAndRoomIsHall() {
 		//given
 		Door door = new Door(true, "1");
 		Room kitchen = new Room(null,
