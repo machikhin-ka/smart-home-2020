@@ -1,5 +1,12 @@
 package ru.sbt.mipt.oop;
 
+import ru.sbt.mipt.oop.domain.Door;
+import ru.sbt.mipt.oop.domain.Light;
+import ru.sbt.mipt.oop.domain.Room;
+import ru.sbt.mipt.oop.domain.SmartHome;
+import ru.sbt.mipt.oop.serialization.JsonSmartHomeSerialization;
+import ru.sbt.mipt.oop.serialization.SmartHomeSerialization;
+
 import java.util.Arrays;
 
 public class HomeBuilder {

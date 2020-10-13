@@ -1,6 +1,13 @@
 package ru.sbt.mipt.oop;
 
 import org.junit.jupiter.api.*;
+import ru.sbt.mipt.oop.domain.Light;
+import ru.sbt.mipt.oop.domain.Room;
+import ru.sbt.mipt.oop.domain.SmartHome;
+import ru.sbt.mipt.oop.events.SensorEvent;
+import ru.sbt.mipt.oop.events.SensorEventType;
+import ru.sbt.mipt.oop.handlers.LightEventHandler;
+import ru.sbt.mipt.oop.handlers.SensorEventHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
