@@ -40,7 +40,7 @@ public class HallEventHandler implements SensorEventHandler {
 			Light light = (Light) object;
 			light.setOn(false);
 			SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-			new CommandSender().sendCommand(command);
+			commandSender.sendCommand(command);
 		});
 	}
 }

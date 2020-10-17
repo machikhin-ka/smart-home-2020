@@ -23,5 +23,6 @@ public class SmartHome implements Actionable {
         if (rooms != null) {
             rooms.forEach(room -> room.execute(action));
         }
+        action.act(this);
     }
 }
