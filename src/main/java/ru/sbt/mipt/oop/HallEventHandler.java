@@ -12,25 +12,35 @@ public class HallEventHandler implements SensorEventHandler {
 	@Override
 	public void handle(SmartHome smartHome, SensorEvent event) {
 		if (event.getType() == DOOR_CLOSED) {
-			for (Room room : smartHome.getRooms()) {
+			smartHome.execute(object -> {
+				if (!(object instanceof Room)) {
+					return;
+				}
+				Room room = (Room) object;
 				if (room.getName().equals("hall")) {
-					for (Door door : room.getDoors()) {
+					room.execute(component -> {
+						if (!(component instanceof Door)) {
+							return;
+						}
+						Door door = (Door) component;
 						if (door.getId().equals(event.getObjectId())) {
 							setOffAllLight(smartHome);
 						}
-					}
+					});
 				}
-			}
+			});
 		}
 	}
 
-	public void setOffAllLight(SmartHome smartHome) {
-		for (Room homeRoom : smartHome.getRooms()) {
-			for (Light light : homeRoom.getLights()) {
-				light.setOn(false);
-				SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-				commandSender.sendCommand(command);
+	private void setOffAllLight(SmartHome smartHome) {
+		smartHome.execute(object -> {
+			if (!(object instanceof Light)) {
+				return;
 			}
-		}
+			Light light = (Light) object;
+			light.setOn(false);
+			SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
+			commandSender.sendCommand(command);
+		});
 	}
 }

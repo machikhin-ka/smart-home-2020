@@ -7,28 +7,30 @@ public class DoorEventHandler implements SensorEventHandler {
 	@Override
 	public void handle(SmartHome smartHome, SensorEvent event) {
 		if (event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED) {
-			for (Room room : smartHome.getRooms()) {
-				for (Door door : room.getDoors()) {
-					if (door.getId().equals(event.getObjectId())) {
-						if (event.getType() == DOOR_OPEN) {
-							openDoor(room, door);
-						} else {
-							closeDoor(smartHome, room, door);
-						}
+			smartHome.execute(object -> {
+				if (!(object instanceof Door)) {
+					return;
+				}
+				Door door = (Door) object;
+				if (door.getId().equals(event.getObjectId())) {
+					if (event.getType() == DOOR_OPEN) {
+						this.openDoor(door);
+					} else {
+						this.closeDoor(door);
 					}
 				}
-			}
+			});
 		}
 	}
 
-	public void openDoor(Room room, Door door) {
+	private void openDoor(Door door) {
 		door.setOpen(true);
-		System.out.println("Door " + door.getId() + " in room " + room.getName() + " was opened.");
+		System.out.println("Door " + door.getId() + " was opened.");
 	}
 
 
-	public void closeDoor(SmartHome smartHome, Room room, Door door) {
+	private void closeDoor(Door door) {
 		door.setOpen(false);
-		System.out.println("Door " + door.getId() + " in room " + room.getName() + " was closed.");
+		System.out.println("Door " + door.getId() + " was closed.");
 	}
 }
