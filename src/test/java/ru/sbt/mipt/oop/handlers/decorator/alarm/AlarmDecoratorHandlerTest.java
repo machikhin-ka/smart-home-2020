@@ -7,8 +7,8 @@ import ru.sbt.mipt.oop.domain.Door;
 import ru.sbt.mipt.oop.domain.Room;
 import ru.sbt.mipt.oop.domain.Signaling;
 import ru.sbt.mipt.oop.domain.SmartHome;
-import ru.sbt.mipt.oop.domain.state.AlarmState;
-import ru.sbt.mipt.oop.domain.state.DeactivatedState;
+import ru.sbt.mipt.oop.domain.state.AlarmSignalingState;
+import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
@@ -60,7 +60,7 @@ class AlarmDecoratorHandlerTest {
 						return;
 					}
 					Signaling signaling = ((Signaling) object);
-					assertEquals(AlarmState.class, signaling.getState().getClass());
+					assertEquals(AlarmSignalingState.class, signaling.getState().getClass());
 				})
 		);
 	}
@@ -87,7 +87,7 @@ class AlarmDecoratorHandlerTest {
 						return;
 					}
 					Signaling signaling = ((Signaling) object);
-					assertEquals(DeactivatedState.class, signaling.getState().getClass());
+					assertEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
 				})
 		);
 	}

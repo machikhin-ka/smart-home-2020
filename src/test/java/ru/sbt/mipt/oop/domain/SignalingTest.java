@@ -2,10 +2,10 @@ package ru.sbt.mipt.oop.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.sbt.mipt.oop.domain.state.ActivatedState;
-import ru.sbt.mipt.oop.domain.state.AlarmState;
-import ru.sbt.mipt.oop.domain.state.DeactivatedState;
-import ru.sbt.mipt.oop.domain.state.State;
+import ru.sbt.mipt.oop.domain.state.ActivatedSignalingState;
+import ru.sbt.mipt.oop.domain.state.AlarmSignalingState;
+import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
+import ru.sbt.mipt.oop.domain.state.SignalingState;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +20,7 @@ class SignalingTest {
 	@Test
 	void changeState_changeStateCorrectly_whenChangeStateToActivatedState() {
 		//given
-		ActivatedState activatedState = new ActivatedState(signaling);
+		ActivatedSignalingState activatedState = new ActivatedSignalingState(signaling);
 		//when
 		signaling.changeState(activatedState);
 		//then
@@ -30,69 +30,69 @@ class SignalingTest {
 	@Test
 	void activateSignaling_whenStateIsDeactivatedBefore() {
 		//given
-		State state = signaling.getState();
+		SignalingState signalingState = signaling.getState();
 		//when
-		state.activate("0");
+		signalingState.activate("0");
 		//then
-		assertEquals(ActivatedState.class, signaling.getState().getClass());
+		assertEquals(ActivatedSignalingState.class, signaling.getState().getClass());
 	}
 
 	@Test
 	void activateSignaling_dontActivateSignaling_whenSignalingIsAlarmedBefore() {
 		//given
-		State state = signaling.getState();
-		state.alarm();
+		SignalingState signalingState = signaling.getState();
+		signalingState.alarm();
 		//when
-		state = signaling.getState();
-		state.activate("0");
+		signalingState = signaling.getState();
+		signalingState.activate("0");
 		//then
-		assertNotEquals(ActivatedState.class, signaling.getState().getClass());
+		assertNotEquals(ActivatedSignalingState.class, signaling.getState().getClass());
 	}
 
 	@Test
 	void deactivateSignaling_whenStateIsActivatedBefore() {
 		//given
-		State state = signaling.getState();
-		state.activate("0");
+		SignalingState signalingState = signaling.getState();
+		signalingState.activate("0");
 		//when
-		state = signaling.getState();
-		state.deactivate("0");
+		signalingState = signaling.getState();
+		signalingState.deactivate("0");
 		//then
-		assertEquals(DeactivatedState.class, signaling.getState().getClass());
+		assertEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
 	}
 
 	@Test
 	void deactivateSignaling_alarmSignaling_whenActivationCodeNotEqualsDeactivationCode() {
 		//given
-		State state = signaling.getState();
-		state.activate("0");
+		SignalingState signalingState = signaling.getState();
+		signalingState.activate("0");
 		//when
-		state = signaling.getState();
-		state.deactivate("1");
+		signalingState = signaling.getState();
+		signalingState.deactivate("1");
 		//then
-		assertEquals(AlarmState.class, signaling.getState().getClass());
+		assertEquals(AlarmSignalingState.class, signaling.getState().getClass());
 	}
 
 	@Test
 	void deactivateSignaling_dontDeactivateSignaling_whenSignalingIsAlarmedBefore() {
 		//given
-		State state = signaling.getState();
-		state.alarm();
+		SignalingState signalingState = signaling.getState();
+		signalingState.alarm();
 		//when
-		state = signaling.getState();
-		state.deactivate("0");
+		signalingState = signaling.getState();
+		signalingState.deactivate("0");
 		//then
-		assertNotEquals(DeactivatedState.class, signaling.getState().getClass());
+		assertNotEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
 	}
 
 	@Test
 	void execute_changeState_WhenActionChangesStateOfSignaling() {
 		//when
 		signaling.execute(object -> {
-			State state = ((Signaling) object).getState();
-			state.activate("0");
+			SignalingState signalingState = ((Signaling) object).getState();
+			signalingState.activate("0");
 		});
 		//then
-		assertEquals(ActivatedState.class, signaling.getState().getClass());
+		assertEquals(ActivatedSignalingState.class, signaling.getState().getClass());
 	}
 }

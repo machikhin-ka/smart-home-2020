@@ -1,6 +1,6 @@
 package ru.sbt.mipt.oop.domain.state;
 
-public class AlarmState implements State {
+public class AlarmSignalingState implements SignalingState {
 	@Override
 	public void activate(String activationCode) {
 	}

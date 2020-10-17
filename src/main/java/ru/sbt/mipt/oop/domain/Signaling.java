@@ -1,22 +1,22 @@
 package ru.sbt.mipt.oop.domain;
 
-import ru.sbt.mipt.oop.domain.state.DeactivatedState;
-import ru.sbt.mipt.oop.domain.state.State;
+import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
+import ru.sbt.mipt.oop.domain.state.SignalingState;
 
 public class Signaling implements Actionable {
-	private State state;
+	private SignalingState signalingState;
 	private String activationCode;
 
 	public Signaling() {
-		this.state = new DeactivatedState(this);
+		this.signalingState = new DeactivatedSignalingState(this);
 	}
 
-	public void changeState(State state) {
-		this.state = state;
+	public void changeState(SignalingState signalingState) {
+		this.signalingState = signalingState;
 	}
 
-	public State getState() {
-		return state;
+	public SignalingState getState() {
+		return signalingState;
 	}
 
 	public void activateSignaling(String activationCode) {
@@ -29,7 +29,7 @@ public class Signaling implements Actionable {
 			this.activationCode = null;
 			System.out.println("Signaling was deactivated");
 		} else {
-			state.alarm();
+			signalingState.alarm();
 		}
 	}
 
