@@ -18,9 +18,9 @@ public class SignalingEventHandler implements SensorEventHandler {
 				}
 				SignalingState signalingState = ((Signaling) object).getState();
 				if (event.getType() == ALARM_ACTIVATE) {
-					signalingState.activate(event.getType().getCode());
+					signalingState.activate(event.getCode());
 				} else {
-					signalingState.deactivate(event.getType().getCode());
+					signalingState.deactivate(event.getCode());
 				}
 			});
 		}

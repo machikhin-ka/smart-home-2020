@@ -24,8 +24,8 @@ class SignalingEventHandlerTest {
 	void handle_activateSignaling_whenEventTypeIsAlarmActivate() {
 		//given
 		SensorEventType eventType = SensorEventType.ALARM_ACTIVATE;
-		eventType.setCode("0");
 		SensorEvent event = new SensorEvent(eventType, "0");
+		event.setCode("0");
 		//when
 		handler.handle(smartHome, event);
 		//then
@@ -42,11 +42,12 @@ class SignalingEventHandlerTest {
 	void handle_deactivateSignaling_whenEventTypeIsAlarmDeactivate() {
 		//given
 		SensorEventType eventType = SensorEventType.ALARM_DEACTIVATE;
-		eventType.setCode("0");
-		handler.handle(smartHome, new SensorEvent(eventType, "0"));
-		eventType = SensorEventType.ALARM_DEACTIVATE;
-		eventType.setCode("0");
 		SensorEvent sensorEvent = new SensorEvent(eventType, "0");
+		sensorEvent.setCode("0");
+		handler.handle(smartHome, sensorEvent);
+		eventType = SensorEventType.ALARM_DEACTIVATE;
+		sensorEvent = new SensorEvent(eventType, "0");
+		sensorEvent.setCode("0");
 		//when
 		handler.handle(smartHome, sensorEvent);
 		//then

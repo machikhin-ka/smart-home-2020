@@ -7,8 +7,9 @@ public class RandomSensorEventProvider implements SensorEventProvider {
 		// pretend like we're getting the events from physical world, but here we're going to just generate some random events
 		if (Math.random() < 0.05) return null; // null means end of event stream
 		SensorEventType sensorEventType = SensorEventType.values()[(int) (6 * Math.random())];
-		sensorEventType.setCode(Integer.toString(ThreadLocalRandom.current().nextInt(3)));
 		String objectId = "" + ((int) (10 * Math.random()));
-		return new SensorEvent(sensorEventType, objectId);
+		SensorEvent sensorEvent = new SensorEvent(sensorEventType, objectId);
+		sensorEvent.setCode(Integer.toString(ThreadLocalRandom.current().nextInt(3)));
+		return sensorEvent;
 	}
 }
