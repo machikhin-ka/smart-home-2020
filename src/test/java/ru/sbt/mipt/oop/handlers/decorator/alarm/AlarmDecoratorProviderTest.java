@@ -4,19 +4,19 @@ import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
 import ru.sbt.mipt.oop.handlers.SignalingEventHandler;
-import ru.sbt.mipt.oop.handlers.decorator.Decorator;
+import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AlarmSendMessageDecoratorTest {
-	private final Decorator decorator = new AlarmSendMessageDecorator();
+class AlarmDecoratorProviderTest {
+	private final DecoratorProvider decoratorProvider = new AlarmDecoratorProvider();
 
 	@Test
 	void decorate_decorateHandler_whenHandlerIsNotSignalingEventHandler() {
 		//given
 		SensorEventHandler handler = new DoorEventHandler();
 		//when
-		SensorEventHandler decorateHandler = decorator.decorate(handler);
+		SensorEventHandler decorateHandler = decoratorProvider.decorate(handler);
 		//then
 		assertNotEquals(handler, decorateHandler);
 	}
@@ -26,7 +26,7 @@ class AlarmSendMessageDecoratorTest {
 		//given
 		SensorEventHandler handler = new SignalingEventHandler();
 		//when
-		SensorEventHandler decorateHandler = decorator.decorate(handler);
+		SensorEventHandler decorateHandler = decoratorProvider.decorate(handler);
 		//then
 		assertEquals(handler, decorateHandler);
 	}

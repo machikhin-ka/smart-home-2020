@@ -9,7 +9,7 @@ import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
-import ru.sbt.mipt.oop.handlers.decorator.Decorator;
+import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,8 +30,8 @@ class AlarmSendMessageDecoratorHandlerTest {
 	@BeforeAll
 	static void beforeAll() {
 		System.setOut(new PrintStream(outContent));
-		Decorator decorator = new AlarmSendMessageDecorator();
-		handler = decorator.decorate(handler);
+		DecoratorProvider decoratorProvider = new AlarmSendMessageDecoratorProvider();
+		handler = decoratorProvider.decorate(handler);
 	}
 
 	@AfterAll

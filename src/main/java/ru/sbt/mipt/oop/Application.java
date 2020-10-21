@@ -6,9 +6,9 @@ import ru.sbt.mipt.oop.domain.SmartHome;
 import ru.sbt.mipt.oop.events.RandomSensorEventProvider;
 import ru.sbt.mipt.oop.events.SensorEventProvider;
 import ru.sbt.mipt.oop.handlers.*;
-import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecorator;
-import ru.sbt.mipt.oop.handlers.decorator.Decorator;
-import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecorator;
+import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecoratorProvider;
+import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
+import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecoratorProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,12 +17,12 @@ import java.util.List;
 public class Application {
     private final SensorEventProvider eventGetter;
     private final List<SensorEventHandler> handlers;
-    private final List<Decorator> decorators;
+    private final List<DecoratorProvider> decoratorProviders;
 
-    public Application(SensorEventProvider eventGetter, List<SensorEventHandler> handlers, List<Decorator> decorators) {
+    public Application(SensorEventProvider eventGetter, List<SensorEventHandler> handlers, List<DecoratorProvider> decoratorProviders) {
         this.eventGetter = eventGetter;
         this.handlers = handlers;
-        this.decorators = decorators;
+        this.decoratorProviders = decoratorProviders;
     }
 
     public static void main(String... args) {
@@ -32,9 +32,9 @@ public class Application {
                 new LightEventHandler(),
                 new HallEventHandler(commandSender),
                 new SignalingEventHandler());
-        List<Decorator> decorators = Arrays.asList(new AlarmDecorator(), new AlarmSendMessageDecorator());
+        List<DecoratorProvider> decoratorProviders = Arrays.asList(new AlarmDecoratorProvider(), new AlarmSendMessageDecoratorProvider());
         SensorEventProvider randomSensorEventProvider = new RandomSensorEventProvider();
-        Application application = new Application(randomSensorEventProvider, handlers, decorators);
+        Application application = new Application(randomSensorEventProvider, handlers, decoratorProviders);
         // начинаем цикл обработки событий
         application.run();
     }
@@ -48,8 +48,8 @@ public class Application {
     private List<SensorEventHandler> decorateHandlers() {
         List<SensorEventHandler> decoratorHandlers = new ArrayList<>();
         for (SensorEventHandler handler : handlers) {
-            for (Decorator decorator : decorators) {
-                handler = decorator.decorate(handler);
+            for (DecoratorProvider decoratorProvider : decoratorProviders) {
+                handler = decoratorProvider.decorate(handler);
             }
             decoratorHandlers.add(handler);
         }

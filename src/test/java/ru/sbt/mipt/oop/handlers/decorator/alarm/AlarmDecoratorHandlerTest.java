@@ -13,7 +13,7 @@ import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
-import ru.sbt.mipt.oop.handlers.decorator.Decorator;
+import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
 
 import java.util.Arrays;
 
@@ -26,8 +26,8 @@ class AlarmDecoratorHandlerTest {
 
 	@BeforeAll
 	static void beforeAll() {
-		Decorator decorator = new AlarmDecorator();
-		handler = decorator.decorate(handler);
+		DecoratorProvider decoratorProvider = new AlarmDecoratorProvider();
+		handler = decoratorProvider.decorate(handler);
 	}
 
 	@BeforeEach
