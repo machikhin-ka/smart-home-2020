@@ -10,6 +10,7 @@ import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecorator;
 import ru.sbt.mipt.oop.handlers.decorator.Decorator;
 import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecorator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +42,17 @@ public class Application {
     public void run() {
         JsonSmartHomeDeserialization deserialization = new JsonSmartHomeDeserialization("smart-home-1.js");
         SmartHome smartHome = deserialization.deserialize();
-        new SensorEventProcessingCycle(smartHome, eventGetter, handlers, decorators).start();
+        new SensorEventProcessingCycle(smartHome, eventGetter, decorateHandlers()).start();
+    }
+
+    private List<SensorEventHandler> decorateHandlers() {
+        List<SensorEventHandler> decoratorHandlers = new ArrayList<>();
+        for (SensorEventHandler handler : handlers) {
+            for (Decorator decorator : decorators) {
+                handler = decorator.decorate(handler);
+            }
+            decoratorHandlers.add(handler);
+        }
+        return decoratorHandlers;
     }
 }
