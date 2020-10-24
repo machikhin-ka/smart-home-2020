@@ -2,10 +2,8 @@ package ru.sbt.mipt.oop.handlers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.sbt.mipt.oop.domain.Signaling;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 import ru.sbt.mipt.oop.domain.SmartHome;
-import ru.sbt.mipt.oop.domain.state.ActivatedSignalingState;
-import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 
@@ -33,8 +31,8 @@ class SignalingEventHandlerTest {
 			if (!(object instanceof Signaling)) {
 				return;
 			}
-			Signaling signaling = ((Signaling) object);
-			assertEquals(ActivatedSignalingState.class, signaling.getState().getClass());
+			Signaling signaling = (Signaling) object;
+			assertTrue(signaling.isActivated());
 		});
 	}
 
@@ -55,8 +53,8 @@ class SignalingEventHandlerTest {
 			if (!(object instanceof Signaling)) {
 				return;
 			}
-			Signaling signaling = ((Signaling) object);
-			assertEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
+			Signaling signaling = (Signaling) object;
+			assertTrue(signaling.isDeactivated());
 		});
 	}
 }

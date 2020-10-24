@@ -1,4 +1,4 @@
-package ru.sbt.mipt.oop.domain.state;
+package ru.sbt.mipt.oop.domain.signaling;
 
 public interface SignalingState {
 	void activate(String activationCode);

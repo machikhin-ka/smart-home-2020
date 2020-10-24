@@ -6,35 +6,34 @@ import ru.sbt.mipt.oop.domain.SmartHome;
 import ru.sbt.mipt.oop.events.RandomSensorEventProvider;
 import ru.sbt.mipt.oop.events.SensorEventProvider;
 import ru.sbt.mipt.oop.handlers.*;
-import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecoratorProvider;
-import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
-import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecoratorProvider;
+import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecoratorHandler;
+import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecoratorHandler;
+import ru.sbt.mipt.oop.handlers.decorator.alarm.SendMessageDecoratorAction;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Application {
     private final SensorEventProvider eventGetter;
     private final List<SensorEventHandler> handlers;
-    private final List<DecoratorProvider> decoratorProviders;
 
-    public Application(SensorEventProvider eventGetter, List<SensorEventHandler> handlers, List<DecoratorProvider> decoratorProviders) {
+    public Application(SensorEventProvider eventGetter, List<SensorEventHandler> handlers) {
         this.eventGetter = eventGetter;
         this.handlers = handlers;
-        this.decoratorProviders = decoratorProviders;
     }
 
     public static void main(String... args) {
         CommandSender commandSender = new CommandSender();
+        SendMessageDecoratorAction smsAction = new SendMessageDecoratorAction();
         List<SensorEventHandler> handlers
-                = Arrays.asList(new DoorEventHandler(),
-                new LightEventHandler(),
-                new HallEventHandler(commandSender),
+                = Arrays.asList(new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(
+                        new DoorEventHandler()), smsAction),
+                new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new LightEventHandler()), smsAction),
+                new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(
+                        new HallEventHandler(commandSender)), smsAction),
                 new SignalingEventHandler());
-        List<DecoratorProvider> decoratorProviders = Arrays.asList(new AlarmDecoratorProvider(), new AlarmSendMessageDecoratorProvider());
         SensorEventProvider randomSensorEventProvider = new RandomSensorEventProvider();
-        Application application = new Application(randomSensorEventProvider, handlers, decoratorProviders);
+        Application application = new Application(randomSensorEventProvider, handlers);
         // начинаем цикл обработки событий
         application.run();
     }
@@ -42,17 +41,6 @@ public class Application {
     public void run() {
         JsonSmartHomeDeserialization deserialization = new JsonSmartHomeDeserialization("smart-home-1.js");
         SmartHome smartHome = deserialization.deserialize();
-        new SensorEventProcessingCycle(smartHome, eventGetter, decorateHandlers()).start();
-    }
-
-    private List<SensorEventHandler> decorateHandlers() {
-        List<SensorEventHandler> decoratorHandlers = new ArrayList<>();
-        for (SensorEventHandler handler : handlers) {
-            for (DecoratorProvider decoratorProvider : decoratorProviders) {
-                handler = decoratorProvider.decorate(handler);
-            }
-            decoratorHandlers.add(handler);
-        }
-        return decoratorHandlers;
+        new SensorEventProcessingCycle(smartHome, eventGetter, handlers).start();
     }
 }

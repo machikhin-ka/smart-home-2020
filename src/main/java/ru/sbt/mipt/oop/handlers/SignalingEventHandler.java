@@ -1,8 +1,7 @@
 package ru.sbt.mipt.oop.handlers;
 
-import ru.sbt.mipt.oop.domain.Signaling;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 import ru.sbt.mipt.oop.domain.SmartHome;
-import ru.sbt.mipt.oop.domain.state.SignalingState;
 import ru.sbt.mipt.oop.events.SensorEvent;
 
 import static ru.sbt.mipt.oop.events.SensorEventType.ALARM_ACTIVATE;
@@ -16,11 +15,11 @@ public class SignalingEventHandler implements SensorEventHandler {
 				if (!(object instanceof Signaling)) {
 					return;
 				}
-				SignalingState signalingState = ((Signaling) object).getState();
+				Signaling signaling = ((Signaling) object);
 				if (event.getType() == ALARM_ACTIVATE) {
-					signalingState.activate(event.getCode());
+					signaling.activateSignaling(event.getCode());
 				} else {
-					signalingState.deactivate(event.getCode());
+					signaling.deactivateSignaling(event.getCode());
 				}
 			});
 		}

@@ -1,34 +1,24 @@
 package ru.sbt.mipt.oop.handlers.decorator.alarm;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.domain.Door;
 import ru.sbt.mipt.oop.domain.Room;
-import ru.sbt.mipt.oop.domain.Signaling;
 import ru.sbt.mipt.oop.domain.SmartHome;
-import ru.sbt.mipt.oop.domain.state.AlarmSignalingState;
-import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
-import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AlarmDecoratorHandlerTest {
-	private static SensorEventHandler handler = new DoorEventHandler();
+	private static final SensorEventHandler handler = new AlarmDecoratorHandler(new DoorEventHandler());
 	private SmartHome smartHome;
 	private final Door door = new Door(false, "1");
-
-	@BeforeAll
-	static void beforeAll() {
-		DecoratorProvider decoratorProvider = new AlarmDecoratorProvider();
-		handler = decoratorProvider.decorate(handler);
-	}
 
 	@BeforeEach
 	void beforeEach() {
@@ -47,7 +37,7 @@ class AlarmDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
+			signaling.activateSignaling("0");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when
@@ -60,7 +50,7 @@ class AlarmDecoratorHandlerTest {
 						return;
 					}
 					Signaling signaling = ((Signaling) object);
-					assertEquals(AlarmSignalingState.class, signaling.getState().getClass());
+					assertTrue(signaling.isAlarmed());
 				})
 		);
 	}
@@ -73,8 +63,8 @@ class AlarmDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
-			signaling.getState().deactivate("0");
+			signaling.activateSignaling("0");
+			signaling.deactivateSignaling("0");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when
@@ -87,7 +77,7 @@ class AlarmDecoratorHandlerTest {
 						return;
 					}
 					Signaling signaling = ((Signaling) object);
-					assertEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
+					assertTrue(signaling.isDeactivated());
 				})
 		);
 	}
@@ -100,8 +90,8 @@ class AlarmDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
-			signaling.getState().deactivate("1");
+			signaling.activateSignaling("0");
+			signaling.deactivateSignaling("1");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when

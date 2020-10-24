@@ -1,5 +1,7 @@
 package ru.sbt.mipt.oop.domain;
 
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
+
 import java.util.ArrayList;
 import java.util.Collection;
 

@@ -3,13 +3,12 @@ package ru.sbt.mipt.oop.handlers.decorator.alarm;
 import org.junit.jupiter.api.*;
 import ru.sbt.mipt.oop.domain.Door;
 import ru.sbt.mipt.oop.domain.Room;
-import ru.sbt.mipt.oop.domain.Signaling;
 import ru.sbt.mipt.oop.domain.SmartHome;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
-import ru.sbt.mipt.oop.handlers.decorator.DecoratorProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,8 +29,8 @@ class AlarmSendMessageDecoratorHandlerTest {
 	@BeforeAll
 	static void beforeAll() {
 		System.setOut(new PrintStream(outContent));
-		DecoratorProvider decoratorProvider = new AlarmSendMessageDecoratorProvider();
-		handler = decoratorProvider.decorate(handler);
+		SendMessageDecoratorAction smsAction = new SendMessageDecoratorAction();
+		handler = new AlarmSendMessageDecoratorHandler(handler, smsAction);
 	}
 
 	@AfterAll
@@ -62,7 +61,7 @@ class AlarmSendMessageDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
+			signaling.activateSignaling("0");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when
@@ -80,8 +79,8 @@ class AlarmSendMessageDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
-			signaling.getState().deactivate("0");
+			signaling.activateSignaling("0");
+			signaling.deactivateSignaling("0");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when
@@ -99,14 +98,14 @@ class AlarmSendMessageDecoratorHandlerTest {
 				return;
 			}
 			Signaling signaling = ((Signaling) object);
-			signaling.getState().activate("0");
-			signaling.getState().deactivate("1");
+			signaling.activateSignaling("0");
+			signaling.deactivateSignaling("1");
 		});
 		SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
 		//when
 		handler.handle(smartHome, event);
 		//then
 		List<String> lines = Arrays.asList(outContent.toString().split("\n"));
-		assertEquals("Sending sms...", lines.get(2));
+		assertEquals("Sending sms...", lines.get(3));
 	}
 }

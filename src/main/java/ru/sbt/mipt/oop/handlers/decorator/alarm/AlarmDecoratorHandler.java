@@ -1,9 +1,7 @@
 package ru.sbt.mipt.oop.handlers.decorator.alarm;
 
 import ru.sbt.mipt.oop.domain.*;
-import ru.sbt.mipt.oop.domain.state.ActivatedSignalingState;
-import ru.sbt.mipt.oop.domain.state.AlarmSignalingState;
-import ru.sbt.mipt.oop.domain.state.SignalingState;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
@@ -23,13 +21,12 @@ public class AlarmDecoratorHandler implements SensorEventHandler {
 					return;
 				}
 				Signaling signaling = (Signaling) object;
-				SignalingState signalingState = signaling.getState();
-				if (signalingState instanceof AlarmSignalingState) {
+				if (signaling.isAlarmed()) {
 					return;
 				}
 				handler.handle(smartHome, event);
-				if (signalingState instanceof ActivatedSignalingState) {
-					signalingState.alarm();
+				if (signaling.isActivated()) {
+					signaling.alarmSignaling();
 				}
 			});
 		}

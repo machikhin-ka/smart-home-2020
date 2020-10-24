@@ -2,10 +2,8 @@ package ru.sbt.mipt.oop.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.sbt.mipt.oop.domain.state.ActivatedSignalingState;
-import ru.sbt.mipt.oop.domain.state.AlarmSignalingState;
-import ru.sbt.mipt.oop.domain.state.DeactivatedSignalingState;
-import ru.sbt.mipt.oop.domain.state.SignalingState;
+import ru.sbt.mipt.oop.domain.signaling.ActivatedSignalingState;
+import ru.sbt.mipt.oop.domain.signaling.Signaling;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,75 +22,64 @@ class SignalingTest {
 		//when
 		signaling.changeState(activatedState);
 		//then
-		assertEquals(activatedState, signaling.getState());
+		assertTrue(signaling.isActivated());
 	}
 
 	@Test
 	void activateSignaling_whenStateIsDeactivatedBefore() {
-		//given
-		SignalingState signalingState = signaling.getState();
 		//when
-		signalingState.activate("0");
+		signaling.activateSignaling("0");
 		//then
-		assertEquals(ActivatedSignalingState.class, signaling.getState().getClass());
+		assertTrue(signaling.isActivated());
 	}
 
 	@Test
 	void activateSignaling_dontActivateSignaling_whenSignalingIsAlarmedBefore() {
 		//given
-		SignalingState signalingState = signaling.getState();
-		signalingState.alarm();
+		signaling.alarmSignaling();
 		//when
-		signalingState = signaling.getState();
-		signalingState.activate("0");
+		signaling.activateSignaling("0");
 		//then
-		assertNotEquals(ActivatedSignalingState.class, signaling.getState().getClass());
+		assertFalse(signaling.isActivated());
 	}
 
 	@Test
 	void deactivateSignaling_whenStateIsActivatedBefore() {
 		//given
-		SignalingState signalingState = signaling.getState();
-		signalingState.activate("0");
+		signaling.activateSignaling("0");
 		//when
-		signalingState = signaling.getState();
-		signalingState.deactivate("0");
+		signaling.deactivateSignaling("0");
 		//then
-		assertEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
+		assertTrue(signaling.isDeactivated());
 	}
 
 	@Test
 	void deactivateSignaling_alarmSignaling_whenActivationCodeNotEqualsDeactivationCode() {
 		//given
-		SignalingState signalingState = signaling.getState();
-		signalingState.activate("0");
+		signaling.activateSignaling("0");
 		//when
-		signalingState = signaling.getState();
-		signalingState.deactivate("1");
+		signaling.deactivateSignaling("1");
 		//then
-		assertEquals(AlarmSignalingState.class, signaling.getState().getClass());
+		assertTrue(signaling.isAlarmed());
 	}
 
 	@Test
 	void deactivateSignaling_dontDeactivateSignaling_whenSignalingIsAlarmedBefore() {
 		//given
-		SignalingState signalingState = signaling.getState();
-		signalingState.alarm();
+		signaling.alarmSignaling();
 		//when
-		signalingState = signaling.getState();
-		signalingState.deactivate("0");
+		signaling.deactivateSignaling("0");
 		//then
-		assertNotEquals(DeactivatedSignalingState.class, signaling.getState().getClass());
+		assertFalse(signaling.isDeactivated());
 	}
 
 	@Test
 	void execute_changeState_WhenActionChangesStateOfSignaling() {
 		//when
 		signaling.execute(object -> {
-			SignalingState signalingState = ((Signaling) object).getState();
-			signalingState.activate("0");
+			signaling.activateSignaling("0");
 		});
 		//then
-		assertEquals(ActivatedSignalingState.class, signaling.getState().getClass());
+		assertTrue(signaling.isActivated());
 	}
 }
