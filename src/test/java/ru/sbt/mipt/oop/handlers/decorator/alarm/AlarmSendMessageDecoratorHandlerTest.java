@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class AlarmSendMessageDecoratorHandlerTest {
-	private static SensorEventHandler handler = new DoorEventHandler();
+	private static final SensorEventHandler handler = new AlarmSendMessageDecoratorHandler(new DoorEventHandler());
 	private SmartHome smartHome;
 	private final Door door = new Door(false, "1");
 	private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -29,8 +29,6 @@ class AlarmSendMessageDecoratorHandlerTest {
 	@BeforeAll
 	static void beforeAll() {
 		System.setOut(new PrintStream(outContent));
-		SendMessageDecoratorAction smsAction = new SendMessageDecoratorAction();
-		handler = new AlarmSendMessageDecoratorHandler(handler, smsAction);
 	}
 
 	@AfterAll

@@ -8,11 +8,9 @@ import ru.sbt.mipt.oop.handlers.SensorEventHandler;
 
 public class AlarmSendMessageDecoratorHandler implements SensorEventHandler{
 	private final SensorEventHandler handler;
-	private final SendMessageDecoratorAction action;
 
-	public AlarmSendMessageDecoratorHandler(SensorEventHandler handler, SendMessageDecoratorAction action) {
+	public AlarmSendMessageDecoratorHandler(SensorEventHandler handler) {
 		this.handler = handler;
-		this.action = action;
 	}
 
 	@Override
@@ -24,7 +22,7 @@ public class AlarmSendMessageDecoratorHandler implements SensorEventHandler{
 				}
 				Signaling signaling = (Signaling) object;
 				if (signaling.isAlarmed() || signaling.isActivated()) {
-					action.sendMessage(event);
+					System.out.println("Sending sms...");
 				}
 			});
 		}

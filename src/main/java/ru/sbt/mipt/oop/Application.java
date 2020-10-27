@@ -8,7 +8,6 @@ import ru.sbt.mipt.oop.events.SensorEventProvider;
 import ru.sbt.mipt.oop.handlers.*;
 import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmDecoratorHandler;
 import ru.sbt.mipt.oop.handlers.decorator.alarm.AlarmSendMessageDecoratorHandler;
-import ru.sbt.mipt.oop.handlers.decorator.alarm.SendMessageDecoratorAction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +23,10 @@ public class Application {
 
     public static void main(String... args) {
         CommandSender commandSender = new CommandSender();
-        SendMessageDecoratorAction smsAction = new SendMessageDecoratorAction();
         List<SensorEventHandler> handlers
-                = Arrays.asList(new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(
-                        new DoorEventHandler()), smsAction),
-                new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new LightEventHandler()), smsAction),
-                new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(
-                        new HallEventHandler(commandSender)), smsAction),
+                = Arrays.asList(new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new DoorEventHandler())),
+                new AlarmDecoratorHandler(new LightEventHandler()),
+                new AlarmDecoratorHandler(new HallEventHandler(commandSender)),
                 new SignalingEventHandler());
         SensorEventProvider randomSensorEventProvider = new RandomSensorEventProvider();
         Application application = new Application(randomSensorEventProvider, handlers);
