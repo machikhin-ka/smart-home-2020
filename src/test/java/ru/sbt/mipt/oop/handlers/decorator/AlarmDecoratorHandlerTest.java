@@ -1,6 +1,7 @@
-package ru.sbt.mipt.oop.handlers.decorator.alarm;
+package ru.sbt.mipt.oop.handlers.decorator;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.sbt.mipt.oop.domain.Door;
 import ru.sbt.mipt.oop.domain.Room;
 import ru.sbt.mipt.oop.domain.SmartHome;
@@ -10,32 +11,14 @@ import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class AlarmSendMessageDecoratorHandlerTest {
-	private static final SensorEventHandler handler = new AlarmSendMessageDecoratorHandler(new DoorEventHandler());
+class AlarmDecoratorHandlerTest {
+	private static final SensorEventHandler handler = new AlarmDecoratorHandler(new DoorEventHandler());
 	private SmartHome smartHome;
 	private final Door door = new Door(false, "1");
-	private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-	private static final PrintStream originalOut = System.out;
-
-	@BeforeAll
-	static void beforeAll() {
-		System.setOut(new PrintStream(outContent));
-	}
-
-	@AfterAll
-	static void afterAll() throws IOException {
-		System.setOut(originalOut);
-		outContent.close();
-	}
 
 	@BeforeEach
 	void beforeEach() {
@@ -46,13 +29,8 @@ class AlarmSendMessageDecoratorHandlerTest {
 		smartHome.addRoom(kitchen);
 	}
 
-	@AfterEach
-	void afterEach() {
-		outContent.reset();
-	}
-
 	@Test
-	void handle_typeSendingSms_whenEventTypeIsDoorOpenAndSignalingStateIsActivated() {
+	void handle_AlarmSignaling_whenEventTypeIsDoorOpenAndSignalingStateIsActivated() {
 		//given
 		smartHome.execute(object -> {
 			if (!(object instanceof Signaling)) {
@@ -65,8 +43,16 @@ class AlarmSendMessageDecoratorHandlerTest {
 		//when
 		handler.handle(smartHome, event);
 		//then
-		List<String> lines = Arrays.asList(outContent.toString().split("\n"));
-		assertEquals("Sending sms...", lines.get(1));
+		assertAll(
+				() -> assertTrue(door.isOpen()),
+				() -> smartHome.execute(object -> {
+					if (!(object instanceof Signaling)) {
+						return;
+					}
+					Signaling signaling = ((Signaling) object);
+					assertTrue(signaling.isAlarmed());
+				})
+		);
 	}
 
 	@Test
@@ -84,12 +70,20 @@ class AlarmSendMessageDecoratorHandlerTest {
 		//when
 		handler.handle(smartHome, event);
 		//then
-		List<String> lines = Arrays.asList(outContent.toString().split("\n"));
-		assertNotEquals("Sending sms...", lines.get(2));
+		assertAll(
+				() -> assertTrue(door.isOpen()),
+				() -> smartHome.execute(object -> {
+					if (!(object instanceof Signaling)) {
+						return;
+					}
+					Signaling signaling = ((Signaling) object);
+					assertTrue(signaling.isDeactivated());
+				})
+		);
 	}
 
 	@Test
-	void handle_typeSendingSms_whenSignalingStateIsAlarmed() {
+	void handle_doNothing_whenSignalingStateIsAlarmed() {
 		//given
 		smartHome.execute(object -> {
 			if (!(object instanceof Signaling)) {
@@ -103,7 +97,6 @@ class AlarmSendMessageDecoratorHandlerTest {
 		//when
 		handler.handle(smartHome, event);
 		//then
-		List<String> lines = Arrays.asList(outContent.toString().split("\n"));
-		assertEquals("Sending sms...", lines.get(3));
+		assertFalse(door.isOpen());
 	}
 }
