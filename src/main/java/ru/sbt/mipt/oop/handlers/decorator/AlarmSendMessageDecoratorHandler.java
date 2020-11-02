@@ -6,7 +6,7 @@ import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.handlers.SensorEventHandler;
 
-public class AlarmSendMessageDecoratorHandler implements SensorEventHandler{
+public class AlarmSendMessageDecoratorHandler implements SensorEventHandler {
 	private final SensorEventHandler handler;
 
 	public AlarmSendMessageDecoratorHandler(SensorEventHandler handler) {
