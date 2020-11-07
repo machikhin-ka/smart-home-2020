@@ -15,7 +15,7 @@ import java.util.Map;
 @Configuration
 public class RemoteControlConfiguration {
 	@Bean
-	public RemoteControlRegistry getRemoteControlRegistry(Collection<RemoteControl> remoteControls) {
+	public RemoteControlRegistry remoteControlRegistry(Collection<RemoteControl> remoteControls) {
 		RemoteControlRegistry registry = new RemoteControlRegistry();
 		remoteControls.forEach(e -> {
 			registry.registerRemoteControl(e, e.getId());
@@ -24,7 +24,7 @@ public class RemoteControlConfiguration {
 	}
 
 	@Bean
-	public SmartHomeRemoteControl getSmartHomeRemoteControl(Map<String, RemoteControlCommand> commands) {
+	public SmartHomeRemoteControl smartHomeRemoteControl(Map<String, RemoteControlCommand> commands) {
 		Map<String, String> nameToCode = Map.of(
 				"turnOnLightCommand", "A",
 				"closeHallDoorCommand", "B",
@@ -40,13 +40,13 @@ public class RemoteControlConfiguration {
 		return remoteControl;
 	}
 
-	@Bean(name = "turnOnLightCommand")
-	public LightCommand getTurnOnLightCommand(SmartHome smartHome) {
+	@Bean
+	public LightCommand turnOnLightCommand(SmartHome smartHome) {
 		return new LightCommand(smartHome, true);
 	}
 
-	@Bean(name = "turnOffLightCommand")
-	public LightCommand getTurnOffLightCommand(SmartHome smartHome) {
+	@Bean
+	public LightCommand turnOffLightCommand(SmartHome smartHome) {
 		return new LightCommand(smartHome, false);
 	}
 }

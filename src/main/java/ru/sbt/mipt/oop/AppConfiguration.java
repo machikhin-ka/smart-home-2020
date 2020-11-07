@@ -20,18 +20,18 @@ import java.util.Collection;
 @ComponentScan
 public class AppConfiguration {
 	@Bean
-	public SmartHomeDeserialization getSmartHomeDeserialization() {
+	public SmartHomeDeserialization smartHomeDeserialization() {
 		return new JsonSmartHomeDeserialization("smart-home-1.js");
 	}
 
 	@Bean
-	public SmartHome getSmartHome(SmartHomeDeserialization deserialization) {
+	public SmartHome smartHome(SmartHomeDeserialization deserialization) {
 		return deserialization.deserialize();
 	}
 
 	@Bean
-	public SensorEventsManager getSensorEventsManager(Collection<SensorEventHandler> handlers, SmartHome smartHome,
-													  SensorEventFactory factory) {
+	public SensorEventsManager sensorEventsManager(Collection<SensorEventHandler> handlers, SmartHome smartHome,
+												   SensorEventFactory factory) {
 		SensorEventsManager sensorEventsManager = new SensorEventsManager();
 		handlers.stream().
 				map(h -> new EventHandlerAdapter(h, smartHome, factory))
@@ -40,17 +40,17 @@ public class AppConfiguration {
 	}
 
 	@Bean
-	public SensorEventHandler getDoorDecoratorHandler() {
+	public SensorEventHandler doorDecoratorHandler() {
 		return new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new DoorEventHandler()));
 	}
 
 	@Bean
-	public SensorEventHandler getLightDecoratorHandler() {
+	public SensorEventHandler lightDecoratorHandler() {
 		return new AlarmDecoratorHandler(new LightEventHandler());
 	}
 
 	@Bean
-	public SensorEventHandler getHallDecoratorHandler(CommandSender sender) {
+	public SensorEventHandler hallDecoratorHandler(CommandSender sender) {
 		return new AlarmDecoratorHandler(new HallEventHandler(sender));
 	}
 }
