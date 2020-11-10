@@ -9,12 +9,14 @@ import ru.sbt.mipt.oop.command.CommandSender;
 import ru.sbt.mipt.oop.deserialization.JsonSmartHomeDeserialization;
 import ru.sbt.mipt.oop.deserialization.SmartHomeDeserialization;
 import ru.sbt.mipt.oop.domain.SmartHome;
+import ru.sbt.mipt.oop.events.SensorEventType;
 import ru.sbt.mipt.oop.factories.SensorEventFactory;
 import ru.sbt.mipt.oop.handlers.*;
 import ru.sbt.mipt.oop.handlers.decorator.AlarmDecoratorHandler;
 import ru.sbt.mipt.oop.handlers.decorator.AlarmSendMessageDecoratorHandler;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Configuration
 @ComponentScan
@@ -30,27 +32,43 @@ public class AppConfiguration {
 	}
 
 	@Bean
-	public SensorEventsManager sensorEventsManager(Collection<SensorEventHandler> handlers, SmartHome smartHome,
-												   SensorEventFactory factory) {
+	public SensorEventsManager sensorEventsManager(Collection<EventHandlerAdapter> adapters) {
 		SensorEventsManager sensorEventsManager = new SensorEventsManager();
-		handlers.stream().
-				map(h -> new EventHandlerAdapter(h, smartHome, factory))
-				.forEach(sensorEventsManager::registerEventHandler);
+		adapters.forEach(sensorEventsManager::registerEventHandler);
 		return sensorEventsManager;
 	}
 
 	@Bean
-	public SensorEventHandler doorDecoratorHandler() {
-		return new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new DoorEventHandler()));
+	public EventHandlerAdapter doorHandlerAdapter(SmartHome smartHome, SensorEventFactory factory) {
+		return new EventHandlerAdapter(
+				new AlarmSendMessageDecoratorHandler(new AlarmDecoratorHandler(new DoorEventHandler())),
+				smartHome, factory);
 	}
 
 	@Bean
-	public SensorEventHandler lightDecoratorHandler() {
-		return new AlarmDecoratorHandler(new LightEventHandler());
+	public EventHandlerAdapter lightHandlerAdapter(SmartHome smartHome, SensorEventFactory factory) {
+		return new EventHandlerAdapter(new AlarmDecoratorHandler(new LightEventHandler()), smartHome, factory);
 	}
 
 	@Bean
-	public SensorEventHandler hallDecoratorHandler(CommandSender sender) {
-		return new AlarmDecoratorHandler(new HallEventHandler(sender));
+	public EventHandlerAdapter hallHandlerAdapter(CommandSender sender, SmartHome smartHome,
+												  SensorEventFactory factory) {
+		return new EventHandlerAdapter(new AlarmDecoratorHandler(new HallEventHandler(sender)), smartHome, factory);
+	}
+
+	@Bean
+	public EventHandlerAdapter signalingHandlerAdapter(SignalingEventHandler handler, SmartHome smartHome,
+													   SensorEventFactory factory) {
+		return new EventHandlerAdapter(handler, smartHome, factory);
+	}
+
+	@Bean
+	public Map<String, SensorEventType> eventTypes() {
+		return Map.of("DoorIsOpen", SensorEventType.DOOR_OPEN,
+				"DoorIsClosed", SensorEventType.DOOR_CLOSED,
+				"LightIsOn", SensorEventType.LIGHT_ON,
+				"LightIsOff", SensorEventType.LIGHT_OFF,
+				"DoorIsLocked", SensorEventType.ALARM_ACTIVATE,
+				"DoorIsUnlocked", SensorEventType.ALARM_DEACTIVATE);
 	}
 }
