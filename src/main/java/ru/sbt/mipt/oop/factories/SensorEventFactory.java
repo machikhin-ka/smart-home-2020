@@ -11,13 +11,8 @@ import java.util.Map;
 public class SensorEventFactory {
 	private final Map<String, SensorEventType> eventTypes;
 
-	{
-		eventTypes = Map.of("DoorIsOpen", SensorEventType.DOOR_OPEN,
-				"DoorIsClosed", SensorEventType.DOOR_CLOSED,
-				"LightIsOn", SensorEventType.LIGHT_ON,
-				"LightIsOff", SensorEventType.LIGHT_OFF,
-				"DoorIsLocked", SensorEventType.ALARM_ACTIVATE,
-				"DoorIsUnlocked", SensorEventType.ALARM_DEACTIVATE);
+	public SensorEventFactory(Map<String, SensorEventType> eventTypes) {
+		this.eventTypes = eventTypes;
 	}
 
 	public SensorEvent createEvent(CCSensorEvent event) {
